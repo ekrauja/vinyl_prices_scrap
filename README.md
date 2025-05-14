@@ -24,11 +24,11 @@
 - **Datu Struktūra**
   Iegūtā informācija tiek saglabāta kā saraksts (self.products_info_list), kur katrs elements ir vārdnīca ar šādiem laukiem:
 
-  artist: Mākslinieka vārds
-  title: Albuma nosaukums
-  price: Cena eiro
-  format: Formāts (piemēram, "Vinyl")
-  availability: Pieejamība (piemēram, "Ir veikalā" vai "Pārdots")
+  - artist: Mākslinieka vārds
+  - title: Albuma nosaukums
+  - price: Cena eiro
+  - format: Formāts (piemēram, "Vinyl")
+  - availability: Pieejamība (piemēram, "Ir veikalā" vai "Pārdots")
 
 ## Prasības
 
