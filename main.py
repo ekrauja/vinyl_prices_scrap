@@ -29,7 +29,7 @@ class Product:
             else:
                 formats = []
 
-
+            info_list = {}
             
             if artist_name in name and " - " in name:
                 if prices.string is not None:
@@ -41,15 +41,12 @@ class Product:
                     for format_item in formats:
                         format = format_item.text
                         vinyl_format = ""
-                        info_list = {}
+
                         if "Vinyl" in format:
                             vinyl_format_details = format.replace("Format:", "").strip()
                             vinyl_format = vinyl_format_details.split(",")[0].strip()
 
-                            info_list["artist"] = artist
-                            info_list["title"] = title
-                            info_list["price"] = price
-                            info_list["format"] = vinyl_format
+                            
                             
 
                             if "Ir veikalā" in format:
@@ -58,24 +55,25 @@ class Product:
                             if "Pārdots" in format:
                                 sold = format.replace("Pieejamība:", "").strip()
                                 info_list["availability"] = sold
-                        
-                        
-                        self.products_info_list.append(info_list)
                             
-
-        if len(self.products_info_list) == 0:
-            print(f"No results found for artist: {artist_name}")
-            return
+                            info_list["artist"] = artist
+                            info_list["title"] = title
+                            info_list["price"] = price
+                            info_list["format"] = vinyl_format
+                        
+                            
+                            self.products_info_list.append(info_list)
+                            
 
     def printList(self):
         for product in self.products_info_list:
-            print(f"Artist: {product['artist']}, Title: {product['title']}, Price: {product['price']} €")
+            print(f"Artist: {product['artist']}, Title: {product['title']}, Price: {product['price']} €, Format: {product['format']}")
 
 
     def isAlbumAvailable(self, album_title):
         for product in self.products_info_list:
             if product["title"] == album_title.title():
-                return f"Album '{album_title}' is available for {product['price']} €." 
+                return f"Album '{album_title}' is available" 
                 
         return f"Album '{album_title}' is not available."
 
@@ -88,35 +86,53 @@ class Product:
     
         for product in vinyl_list:
             print(f"Artist: {product['artist']}, Title: {product['title']}, Price: {product['price']} €")
-        
+    
+    def calculateAverageAlbumPrice(self, album_title):
+        total_price = 0
+        count = 0
+        for product in self.products_info_list:
+            if product["title"] == album_title.title():
+                total_price += float(product["price"])
+                count += 1
+        avg_price = total_price / count
+        print(f"Average price for album '{album_title}': {avg_price} €")
+
+    def serachAlbum(self, album_title):
+        for product in self.products_info_list:
+            if product["title"] == album_title.title():
+                print(f"Artist: {product['artist']}, Title: {product['title']}, Price: {product['price']} €, Format: {product['format']}")
         
 
         
         
         
 
-input_artist = input("Enter artist name: ").title().strip()
+input_artist = input("Enter artist name or album name: ").title().strip()
 vinyl_info = Product()
 vinyl_info.getVinylInfo(input_artist)
 
-print("Input: \n 1) Sorting by price \n 2) Print list \n 3) Check album availability \n")
+if len(vinyl_info.products_info_list) == 0:
+    print(f"No results found for artist: {input_artist}")
+    exit()
+
+vinyl_info.printList()
+
+print("Input: \n 1) Sorting by price \n 2) Check album availability \n 3) Check average preice of album \n 4) Search for album")
 q_sortPrice = int(input("Enter your choice: "))
 
 match q_sortPrice:
     case 1:
-        vinyl_info.sortPrice(vinyl_info)
+        vinyl_info.sortPrice(vinyl_info) 
     case 2:
-        vinyl_info.printList()
-    case 3:
         album_title = input("Enter album title: ").title().strip()
         print(vinyl_info.isAlbumAvailable(album_title))
+    case 3:
+        album_title = input("Enter album title: ").title().strip()
+        print(vinyl_info.calculateAverageAlbumPrice(album_title))
+    case 4:
+        album_title = input("Enter album title: ").title().strip()
+        vinyl_info.serachAlbum(album_title)
     case _:
         print("Invalid input")
-
-    
-
-
-
-
 
     
